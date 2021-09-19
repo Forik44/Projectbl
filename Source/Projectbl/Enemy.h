@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Components/SplineComponent.h"
 #include "Enemy.generated.h"
 
 UCLASS()
@@ -18,6 +19,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	 
 
 public:	
 	// Called every frame
