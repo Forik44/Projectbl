@@ -15,6 +15,16 @@ public:
 	// Sets default values for this actor's properties
 	ABuilding();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
+	int Cost;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
+	FText Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
+	UStaticMeshComponent* Mesh;
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
