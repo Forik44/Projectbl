@@ -13,5 +13,12 @@ UCLASS()
 class PROJECTBL_API AParentMine : public ABuilding
 {
 	GENERATED_BODY()
+public:
 	
+
+protected:
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
+	int Power;
+
 };
