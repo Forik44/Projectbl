@@ -8,6 +8,21 @@
 #include "Building.h"
 #include "BaseTown.generated.h"
 
+USTRUCT(BlueprintType)
+struct FEdgeInforamation
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
+	FVector LeftUp;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
+	FVector RightUp;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
+	FVector RightDown;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
+	FVector LeftDown;
+};
+
 UCLASS()
 class PROJECTBL_API ABaseTown : public AActor
 {
@@ -32,6 +47,7 @@ private:
 
 	FVector Ray(FVector2D ScreenPosition);
 		
+	bool IsPlaceTaken(int x, int y);
 	
 public:	
 	
@@ -55,10 +71,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
 	TSubclassOf<ABuilding> BuildingClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
+	FEdgeInforamation EdgeInforamation;
+
 	UFUNCTION(BlueprintCallable, Category = "Building")
 	void StartPlacingBuilding();
 
-	
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	void PlaceBuilding(FVector Location);
 
 	
 };
