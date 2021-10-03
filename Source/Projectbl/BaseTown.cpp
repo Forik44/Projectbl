@@ -23,6 +23,13 @@ ABaseTown::ABaseTown()
 void ABaseTown::BeginPlay()
 {
 	Super::BeginPlay();
+
+	for (size_t i = 0; i < GridSize.X; i++)
+	{
+		Grid[i].Rows.SetNum(GridSize.Y);
+	}
+	
+	Grid.SetNum(GridSize.X);
 	
 	Collision->OnInputTouchBegin.AddDynamic(this, &ABaseTown::OpenStoreMenu);
 }
@@ -35,7 +42,7 @@ void ABaseTown::OpenStoreMenu(ETouchIndex::Type Type, UPrimitiveComponent* Actor
 	UMyGameInstance* MyGameInstance = Cast<UMyGameInstance>(GameInstance);
 	if (!MyGameInstance)
 		return;
-	MyGameInstance->ShowWidget();
+	//MyGameInstance->ShowWidget();
 	UE_LOG(LogTemp, Log, TEXT("IsPressed"));
 }
 
@@ -43,6 +50,8 @@ void ABaseTown::OpenStoreMenu(ETouchIndex::Type Type, UPrimitiveComponent* Actor
 void ABaseTown::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+
 
 }
 

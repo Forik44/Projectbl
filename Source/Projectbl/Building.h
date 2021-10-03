@@ -24,12 +24,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
 	UStaticMeshComponent* Mesh;
 
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
+	FVector2D Grid;
 
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
