@@ -8,16 +8,6 @@
 #include "Building.h"
 #include "BaseTown.generated.h"
 
-USTRUCT(BlueprintType)
-struct FRowsGrid
-{	
-	
-	GENERATED_BODY()
-public:
-	TArray<ABuilding> Rows;
-
-};
-
 UCLASS()
 class PROJECTBL_API ABaseTown : public AActor
 {
@@ -30,13 +20,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
 	FVector2D GridSize;
 
-	//TArray<FRowsGrid> Grid;
+	TArray<ABuilding*> Grid;
+
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	void OnTouchPress(ETouchIndex::Type FingerIndex, FVector Location);
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	void OnTouchMove(ETouchIndex::Type FingerIndex, FVector Location);
+
 
 private:
 
-	ABuilding* FlyBuilding; 
-	
-	void StartPlacingBuilding();
+	FVector Ray(FVector2D ScreenPosition);
 		
 	
 public:	
@@ -44,6 +38,13 @@ public:
 	ABaseTown();
 
 	virtual void Tick(float DeltaTime) override;
+
+	void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent);
+
+	UInputComponent* InputComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
+	ABuilding* FlyBuilding;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
 	UBoxComponent* Collision;
@@ -54,6 +55,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
 	TSubclassOf<ABuilding> BuildingClass;
 
-	UFUNCTION(BlueprintCallable, Category = "Menu")
-	void OpenStoreMenu(ETouchIndex::Type Type, UPrimitiveComponent* ActorTouched);
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	void StartPlacingBuilding();
+
+	
+
+	
 };
