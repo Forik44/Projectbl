@@ -1,3 +1,4 @@
+#include "HealthComponent.h"
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
@@ -30,5 +31,10 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UHealthComponent::AddHealth(int fix)
+{
+	Health += fix;
 }
 

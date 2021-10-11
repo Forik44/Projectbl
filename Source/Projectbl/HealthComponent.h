@@ -15,6 +15,8 @@ class PROJECTBL_API UHealthComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UHealthComponent();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	int Health;
 protected:
 	// Called when the game starts
@@ -23,6 +25,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
+		void AddHealth(int fix);
 
 		
 };
