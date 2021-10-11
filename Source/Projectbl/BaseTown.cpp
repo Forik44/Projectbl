@@ -9,6 +9,7 @@
 #include "DrawDebugHelpers.h"
 #include "Components/InputComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "GenericPlatform/GenericPlatformMath.h"
 
 FVector ABaseTown::Ray(FVector2D ScreenPosition)
@@ -17,9 +18,27 @@ FVector ABaseTown::Ray(FVector2D ScreenPosition)
 	FVector WorldDirection;
 	APlayerController* PlayerController1 = UGameplayStatics::GetPlayerController(this, 0);
 	UGameplayStatics::DeprojectScreenToWorld(PlayerController1, ScreenPosition, WorldPosition, WorldDirection);
-	while (WorldPosition.Z > 120)
+	FVector StartPosition = WorldPosition;
+
+	FHitResult OutHit;
+	FCollisionObjectQueryParams ObjectQueryParams;
+	FCollisionQueryParams Params;
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+	bool isObject = GetWorld()->LineTraceSingleByObjectType(OutHit, StartPosition + WorldDirection * 25, WorldPosition + WorldDirection * 5000, ObjectQueryParams, Params);
+	WorldPosition = OutHit.Location;
+	if (!OutHit.GetActor())
 	{
-		WorldPosition += WorldDirection*5;
+		CanBePlaced = false;
+		return WorldPosition;
+	}
+	if(UKismetMathLibrary::ClassIsChildOf(OutHit.GetActor()->GetClass(), ABaseTown::StaticClass()))
+	{
+		UE_LOG(LogTemp, Log, TEXT("PLatforma"));
+		CanBePlaced = true;
+	}
+	else
+	{
+		CanBePlaced = false;
 	}
 	return WorldPosition;
 }
@@ -52,7 +71,6 @@ ABaseTown::ABaseTown()
 	Mesh->SetupAttachment(Collision);
 
 	InputComponent = CreateDefaultSubobject<UInputComponent>("Input Component");
-	SetupPlayerInputComponent(InputComponent);
 
 }
 
@@ -66,94 +84,84 @@ void ABaseTown::BeginPlay()
 	EnableInput(UGameplayStatics::GetPlayerController(this,0));
 }
 
-void ABaseTown::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
-{
 
-	InputComponent->BindTouch(IE_Pressed, this, &ABaseTown::OnTouchPress);
-	InputComponent->BindTouch(IE_Repeat, this, &ABaseTown::OnTouchMove);
-
-
-
-}
-
-void ABaseTown::StartPlacingBuilding()
+void ABaseTown::StartPlacingBuilding(TSubclassOf<ABuilding> BuildingClass)
 {
 	if (FlyBuilding)
 	{
 		FlyBuilding->Destroy();
 	}
-
-
+	IsPlacing = true;
 	FActorSpawnParameters SpawnParametrs;
-	FlyBuilding = GetWorld()->SpawnActor<ABuilding>(BuildingClass, GetActorLocation(), FRotator(0,0,0), SpawnParametrs);
+	FlyBuilding = GetWorld()->SpawnActor<ABuilding>(BuildingClass, FVector(0,0,0), FRotator(0,0,0), SpawnParametrs);
 }
 
 void ABaseTown::PlaceBuilding(FVector Location)
 {
 	FVector WorldPosition = Ray(FVector2D(Location.X, Location.Y));
 
-
-	int multiplierX = EdgeInforamation.LeftUp.X - EdgeInforamation.RightUp.X;
-	WorldPosition.X = ((FMath::CeilToInt(WorldPosition.X) / (int)(multiplierX / GridSize.X)) * (multiplierX / GridSize.X));
-
-	int multiplierY = EdgeInforamation.LeftUp.Y - EdgeInforamation.LeftDown.Y;
-	WorldPosition.Y = ((FMath::CeilToInt(WorldPosition.Y) / (int)(multiplierY / GridSize.Y)) * (multiplierY / GridSize.Y));
-
-	FlyBuilding->SetActorLocation(WorldPosition);
-
-	WorldPosition.X = FMath::Clamp(WorldPosition.X, EdgeInforamation.LeftUp.X , EdgeInforamation.RightUp.X );
-	WorldPosition.Y = FMath::Clamp(WorldPosition.Y, EdgeInforamation.LeftUp.Y , EdgeInforamation.LeftDown.Y );
-
-	int x = ((int)WorldPosition.X + (int)EdgeInforamation.RightDown.X) / ((int)EdgeInforamation.RightDown.X*2 / (int)GridSize.X);
-	int y = ((int)WorldPosition.Y + (int)EdgeInforamation.RightDown.Y) / ((int)EdgeInforamation.RightDown.Y*2 / (int)GridSize.Y);
-
-	if (IsPlaceTaken(x, y))
+	if (IsPlacing)
 	{
-		return;
-	}
+		int multiplierX = EdgeInforamation.LeftUp.X - EdgeInforamation.RightUp.X;
+		WorldPosition.X = ((FMath::CeilToInt(WorldPosition.X) / (int)(multiplierX / GridSize.X)) * (multiplierX / GridSize.X));
 
-	for (int i = 0; i < (int)FlyBuilding->Grid.X; i++)
-	{
-		for (int j = 0; j < (int)FlyBuilding->Grid.Y; j++)
+		int multiplierY = EdgeInforamation.LeftUp.Y - EdgeInforamation.LeftDown.Y;
+		WorldPosition.Y = ((FMath::CeilToInt(WorldPosition.Y) / (int)(multiplierY / GridSize.Y)) * (multiplierY / GridSize.Y));
+
+		WorldPosition.X = FMath::Clamp(WorldPosition.X, EdgeInforamation.LeftUp.X, EdgeInforamation.RightUp.X);
+		WorldPosition.Y = FMath::Clamp(WorldPosition.Y, EdgeInforamation.LeftUp.Y, EdgeInforamation.LeftDown.Y);
+
+		int x = ((int)WorldPosition.X + (int)EdgeInforamation.RightDown.X) / ((int)EdgeInforamation.RightDown.X * 2 / (int)GridSize.X);
+		int y = ((int)WorldPosition.Y + (int)EdgeInforamation.RightDown.Y) / ((int)EdgeInforamation.RightDown.Y * 2 / (int)GridSize.Y);
+
+		if (IsPlaceTaken(x, y))
 		{
-			Grid[(x + i )*(int)GridSize.Y + y + j] = FlyBuilding;
+			return;
 		}
+
+		for (int i = 0; i < (int)FlyBuilding->Grid.X; i++)
+		{
+			for (int j = 0; j < (int)FlyBuilding->Grid.Y; j++)
+			{
+				Grid[(x + i) * (int)GridSize.Y + y + j] = FlyBuilding;
+			}
+		}
+
+
+		UE_LOG(LogTemp, Log, TEXT("Postavil"));
+		FlyBuilding = nullptr;
+		IsPlacing = false;
 	}
-
-	
-	UE_LOG(LogTemp, Log, TEXT("Postavil"));
-	FlyBuilding = nullptr;
-	
 }
 
-
-void ABaseTown::OnTouchPress(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	StartPlacingBuilding();
-}
 
 void ABaseTown::OnTouchMove(ETouchIndex::Type FingerIndex, FVector Location)
 {
+
 	FVector2D ScreenPosition;
 
 	APlayerController* PlayerController1 = UGameplayStatics::GetPlayerController(this, 0);
 
 	ScreenPosition = FVector2D(Location.X, Location.Y);
-
 	FVector NewLocation = Ray(ScreenPosition);
+	if (IsPlacing && CanBePlaced)
+	{
 
-	NewLocation.X = FMath::Clamp(NewLocation.X, EdgeInforamation.LeftUp.X , EdgeInforamation.RightUp.X );
-	NewLocation.Y = FMath::Clamp(NewLocation.Y, EdgeInforamation.LeftUp.Y, EdgeInforamation.LeftDown.Y );
 	
-	int multiplierX = EdgeInforamation.LeftUp.X - EdgeInforamation.RightUp.X;
-	NewLocation.X = ((FMath::CeilToInt(NewLocation.X) / (int)(multiplierX / GridSize.X)) * (multiplierX / GridSize.X));
+		NewLocation.X = FMath::Clamp(NewLocation.X, EdgeInforamation.LeftUp.X, EdgeInforamation.RightUp.X);
+		NewLocation.Y = FMath::Clamp(NewLocation.Y, EdgeInforamation.LeftUp.Y, EdgeInforamation.LeftDown.Y);
 
-	int multiplierY = EdgeInforamation.LeftUp.Y - EdgeInforamation.LeftDown.Y;
-	NewLocation.Y = ((FMath::CeilToInt(NewLocation.Y) / (int)(multiplierY / GridSize.Y)) * (multiplierY / GridSize.Y));
+		int multiplierX = EdgeInforamation.LeftUp.X - EdgeInforamation.RightUp.X;
+		NewLocation.X = ((FMath::CeilToInt(NewLocation.X) / (int)(multiplierX / GridSize.X)) * (multiplierX / GridSize.X));
 
-	FlyBuilding->SetActorLocation(NewLocation);
+		int multiplierY = EdgeInforamation.LeftUp.Y - EdgeInforamation.LeftDown.Y;
+		NewLocation.Y = ((FMath::CeilToInt(NewLocation.Y) / (int)(multiplierY / GridSize.Y)) * (multiplierY / GridSize.Y));
 
-
+		UGameplayStatics::ProjectWorldToScreen(PlayerController1, NewLocation, ScreenPosition);
+		Ray(ScreenPosition);
+		if(CanBePlaced)
+		FlyBuilding->SetActorLocation(NewLocation);
+	}
 }
 
 // Called every frame

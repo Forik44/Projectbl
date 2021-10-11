@@ -37,10 +37,6 @@ protected:
 
 	TArray<ABuilding*> Grid;
 
-	UFUNCTION(BlueprintCallable, Category = "Building")
-	void OnTouchPress(ETouchIndex::Type FingerIndex, FVector Location);
-	UFUNCTION(BlueprintCallable, Category = "Building")
-	void OnTouchMove(ETouchIndex::Type FingerIndex, FVector Location);
 
 
 private:
@@ -48,14 +44,13 @@ private:
 	FVector Ray(FVector2D ScreenPosition);
 		
 	bool IsPlaceTaken(int x, int y);
+	bool CanBePlaced, IsPlacing;
 	
 public:	
 	
 	ABaseTown();
 
 	virtual void Tick(float DeltaTime) override;
-
-	void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent);
 
 	UInputComponent* InputComponent;
 
@@ -69,16 +64,16 @@ public:
 	UStaticMeshComponent* Mesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
-	TSubclassOf<ABuilding> BuildingClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
 	FEdgeInforamation EdgeInforamation;
 
 	UFUNCTION(BlueprintCallable, Category = "Building")
-	void StartPlacingBuilding();
+	void StartPlacingBuilding(TSubclassOf<ABuilding> BuildingClass);
 
 	UFUNCTION(BlueprintCallable, Category = "Building")
 	void PlaceBuilding(FVector Location);
+
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	void OnTouchMove(ETouchIndex::Type FingerIndex, FVector Location);
 
 	
 };
