@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Components/SplineComponent.h"
+#include "HealthComponent.h"
 #include "Enemy.generated.h"
 
 UCLASS()
@@ -29,4 +30,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
+		UHealthComponent*  HealthComponent;
 };
