@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ShootComponent.h"
 #include "Building.generated.h"
+
 
 UCLASS()
 class PROJECTBL_API ABuilding : public AActor
@@ -33,5 +35,8 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
+	UShootComponent* ShootComponent;
 
 };
