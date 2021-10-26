@@ -21,6 +21,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable, Category = "Destroy")
+	void DestroyProjectile();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -33,4 +36,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Shoot")
 	void FoundEnemy(UPrimitiveComponent* OurComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
+	float Damage;
+
+	UFUNCTION(BlueprintCallable, Category = "Events")
+	void SubscribeEvent();
+
+
 };

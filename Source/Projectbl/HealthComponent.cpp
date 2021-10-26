@@ -4,7 +4,7 @@
 
 #include "HealthComponent.h"
 
-// Sets default values for this component's properties
+
 UHealthComponent::UHealthComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -36,5 +36,10 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 void UHealthComponent::AddHealth(int fix)
 {
 	Health += fix;
+	if (Health <= 0)
+	{
+		GetOwner()->Destroy();
+		/*OnHealthEnded.Broadcast();*/
+	}
 }
 

@@ -38,6 +38,9 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	int i;
+	int j;
+
+	FTimerHandle ShootTimer;
 
 public:	
 	// Called every frame
@@ -53,7 +56,11 @@ public:
 	FShootInfo ShootInfo;
 
 	UFUNCTION(BlueprintCallable, Category = "Shoot")
-	void SpawnProjectile(AEnemy* Enemy);
+	void SpawnProjectile();
+
+	UFUNCTION(BlueprintCallable, Category = "Shoot")
+	void StartShooting();
+
 
 
 		

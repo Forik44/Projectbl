@@ -1,4 +1,5 @@
 #include "ShootComponent.h"
+#include "ShootComponent.h"
 #include "Building.h"
 // Fill out your copyright notice in the Description page of Project Settings.
 
@@ -18,7 +19,6 @@ UShootComponent::UShootComponent()
 void UShootComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
 	
 }
 
@@ -27,27 +27,35 @@ void UShootComponent::BeginPlay()
 void UShootComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	ABuilding* OurBuilding = Cast<ABuilding>(this->GetOwner());
-	if (ShootInfo.ShootedEnemies.Num() > 0 && !OurBuilding->IsFly)
-	{
-		for (int j = 0; j < CountOfEnemies && j < ShootInfo.ShootedEnemies.Num(); j++)
-		{
-			SpawnProjectile(ShootInfo.ShootedEnemies[j]);
-			UE_LOG(LogTemp, Log, TEXT("Spawn"));
-		}
-	}
+
 
 }
 
-void UShootComponent::SpawnProjectile(AEnemy* Enemy)
+void UShootComponent::SpawnProjectile()
 {
+	if (ShootInfo.ShootedEnemies.Num() == 0)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(ShootTimer);
+		return;
+	}
 	FActorSpawnParameters SpawnParametrs;
 	AProjectile* Projectile;
 	Projectile = GetWorld()->SpawnActor<AProjectile>(ShootInfo.ProjectileClass, GetOwner()->GetActorTransform(), SpawnParametrs);
 	if (Projectile)
 	{
-		Projectile->Enemy = Enemy;
+		Projectile->Enemy = ShootInfo.ShootedEnemies[0];
 	}
+	Projectile->SubscribeEvent();
+}
+
+void UShootComponent::StartShooting()
+{
+	ABuilding* OurBuilding = Cast<ABuilding>(this->GetOwner());
+	if (ShootInfo.ShootedEnemies.Num() == 1 && !OurBuilding->IsFly)
+	{
+		GetWorld()->GetTimerManager().SetTimer(ShootTimer, this, &UShootComponent::SpawnProjectile, ShootInfo.ShootRate, true);
+	}
+	
 }
 
 

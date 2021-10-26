@@ -45,13 +45,14 @@ void ABuilding::AddEnemy(UPrimitiveComponent* OurComp, AActor* OtherActor, UPrim
 		return;
 	}
 	ShootComponent->ShootInfo.ShootedEnemies.Add(OurEnemy);
-	
+	ShootComponent->StartShooting();
 }
 
 void ABuilding::HideCollision()
 {
 	Collision->SetHiddenInGame(true);
 	IsFly = false;
+	ShootComponent->StartShooting();
 }
 
 void ABuilding::DeleteEnemy(UPrimitiveComponent* OurComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
