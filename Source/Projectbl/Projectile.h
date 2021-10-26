@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Enemy.h"
+#include "Components/SphereComponent.h"
 #include "Projectile.generated.h"
 
 UCLASS()
@@ -26,4 +27,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
     AEnemy* Enemy;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
+	USphereComponent* Collision;
+
+	UFUNCTION(BlueprintCallable, Category = "Shoot")
+	void FoundEnemy(UPrimitiveComponent* OurComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };

@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ShootComponent.h"
+#include "Components/SphereComponent.h"
 #include "Building.generated.h"
+
 
 
 UCLASS()
@@ -39,4 +41,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
 	UShootComponent* ShootComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
+	USphereComponent* Collision;
+
+	UFUNCTION(BlueprintCallable, Category = "Shoot")
+	void AddEnemy(UPrimitiveComponent* OurComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION(BlueprintCallable, Category = "Shoot")
+	void DeleteEnemy(UPrimitiveComponent* OurComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	void HideCollision();
+
+	bool IsFly;
 };

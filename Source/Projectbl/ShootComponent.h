@@ -18,7 +18,7 @@ public:
 	TSubclassOf<AProjectile> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
-		TArray<AEnemy*> ShootedEnymed ;
+		TArray<AEnemy*> ShootedEnemies ;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
 		float ShootRate;
@@ -44,13 +44,17 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
-	float radius;
+	float ShootRadius;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
+	int CountOfEnemies;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
 	FShootInfo ShootInfo;
 
 	UFUNCTION(BlueprintCallable, Category = "Shoot")
 	void SpawnProjectile(AEnemy* Enemy);
+
 
 		
 };

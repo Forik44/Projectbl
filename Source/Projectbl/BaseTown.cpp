@@ -33,7 +33,6 @@ FVector ABaseTown::Ray(FVector2D ScreenPosition)
 	}
 	if(UKismetMathLibrary::ClassIsChildOf(OutHit.GetActor()->GetClass(), ABaseTown::StaticClass()))
 	{
-		UE_LOG(LogTemp, Log, TEXT("PLatforma"));
 		CanBePlaced = true;
 	}
 	else
@@ -94,12 +93,12 @@ void ABaseTown::StartPlacingBuilding(TSubclassOf<ABuilding> BuildingClass)
 	IsPlacing = true;
 	FActorSpawnParameters SpawnParametrs;
 	FlyBuilding = GetWorld()->SpawnActor<ABuilding>(BuildingClass, FVector(0,0,0), FRotator(0,0,0), SpawnParametrs);
+
 }
 
 void ABaseTown::PlaceBuilding(FVector Location)
 {
 	FVector WorldPosition = Ray(FVector2D(Location.X, Location.Y));
-
 	if (IsPlacing)
 	{
 		int multiplierX = EdgeInforamation.LeftUp.X - EdgeInforamation.RightUp.X;
@@ -126,9 +125,7 @@ void ABaseTown::PlaceBuilding(FVector Location)
 				Grid[(x + i) * (int)GridSize.Y + y + j] = FlyBuilding;
 			}
 		}
-
-
-		UE_LOG(LogTemp, Log, TEXT("Postavil"));
+		FlyBuilding->HideCollision();
 		FlyBuilding = nullptr;
 		IsPlacing = false;
 	}
