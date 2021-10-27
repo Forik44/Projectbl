@@ -1,8 +1,7 @@
 #include "HealthComponent.h"
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "HealthComponent.h"
+#include "ProjectblGameModeBase.h"
+#include "Kismet/GameplayStatics.h"
+#include "Enemy.h"
 
 
 UHealthComponent::UHealthComponent()
@@ -38,6 +37,9 @@ void UHealthComponent::AddHealth(int fix)
 	Health += fix;
 	if (Health <= 0)
 	{
+		AProjectblGameModeBase* GameMode = Cast<AProjectblGameModeBase>(UGameplayStatics::GetGameMode(this));
+		AEnemy* Enemy = Cast<AEnemy>(GetOwner());
+		GameMode->AddMoney(Enemy->Award);
 		GetOwner()->Destroy();
 		OnHealthEnded.Broadcast();
 	}

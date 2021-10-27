@@ -10,6 +10,7 @@
 #include "Components/InputComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "ProjectblGameModeBase.h"
 #include "GenericPlatform/GenericPlatformMath.h"
 
 FVector ABaseTown::Ray(FVector2D ScreenPosition)
@@ -101,6 +102,12 @@ void ABaseTown::PlaceBuilding(FVector Location)
 	FVector WorldPosition = Ray(FVector2D(Location.X, Location.Y));
 	if (IsPlacing)
 	{
+		AProjectblGameModeBase* GameMode = Cast<AProjectblGameModeBase>(UGameplayStatics::GetGameMode(this));
+		if (FlyBuilding->Cost > GameMode->GetMoney())
+		{
+			return;
+		}
+		GameMode->AddMoney(-FlyBuilding->Cost);
 		int multiplierX = EdgeInforamation.LeftUp.X - EdgeInforamation.RightUp.X;
 		WorldPosition.X = ((FMath::CeilToInt(WorldPosition.X) / (int)(multiplierX / GridSize.X)) * (multiplierX / GridSize.X));
 

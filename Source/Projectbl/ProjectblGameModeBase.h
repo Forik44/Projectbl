@@ -46,8 +46,18 @@ UCLASS()
 class PROJECTBL_API AProjectblGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+public:
+
+	UFUNCTION(BlueprintCallable, Category = "Economic")
+	void AddMoney(int money);
+
+	UFUNCTION(BlueprintCallable, Category = "Economic")
+	int GetMoney();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Buildings")
 	FBuildingsInfo BuildingsInfo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Economic")
+	int Money;
 };

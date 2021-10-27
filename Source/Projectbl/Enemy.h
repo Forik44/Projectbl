@@ -33,5 +33,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	UHealthComponent*  HealthComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Economic")
+	int Award;
+
 	
 };
