@@ -39,7 +39,7 @@ void UHealthComponent::AddHealth(int fix)
 	if (Health <= 0)
 	{
 		GetOwner()->Destroy();
-		/*OnHealthEnded.Broadcast();*/
+		OnHealthEnded.Broadcast();
 	}
 }
 

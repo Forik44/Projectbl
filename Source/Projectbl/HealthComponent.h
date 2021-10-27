@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FHealthEndedEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FHealthEndedEvent);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECTBL_API UHealthComponent : public UActorComponent
@@ -30,8 +30,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void AddHealth(int fix);
 
-	/*UPROPERTY(BlueprintAssignable, Category = "Health")*/
-	/*FHealthEndedEvent OnHealthEnded;*/
+	UPROPERTY(BlueprintAssignable, Category = "Health")
+	FHealthEndedEvent OnHealthEnded;
 
 		
 };

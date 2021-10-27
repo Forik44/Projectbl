@@ -26,9 +26,8 @@ void AProjectile::BeginPlay()
 
 void AProjectile::DestroyProjectile()
 {
-	if (!Enemy) {
-		this->Destroy();
-	}
+	this->Destroy();
+	
 }
 
 // Called every frame
@@ -69,6 +68,6 @@ void AProjectile::SubscribeEvent()
 	if (!Enemy) {
 		return;
 	}
-	/*Enemy->HealthComponent->OnHealthEnded.AddDynamic(this, &AProjectile::DestroyProjectile);*/
+	Enemy->HealthComponent->OnHealthEnded.AddDynamic(this, &AProjectile::DestroyProjectile);
 }
 
