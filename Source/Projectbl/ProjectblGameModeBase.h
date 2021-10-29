@@ -6,6 +6,8 @@
 #include "ParentTower.h"
 #include "ProjectblGameModeBase.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameOverEvent);
+
 USTRUCT(BlueprintType)
 struct FTowersInfo
 {
@@ -53,6 +55,14 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Economic")
 	int GetMoney();
+
+	UFUNCTION(BlueprintCallable, Category = "Game")
+	void EndGame();
+
+	bool IsGameOver;
+
+	UPROPERTY(BlueprintAssignable, Category = "Game")
+	FGameOverEvent GameOver;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Buildings")
