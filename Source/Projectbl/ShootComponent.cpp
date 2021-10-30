@@ -32,8 +32,9 @@ void UShootComponent::SpawnProjectile()
 		return;
 	}
 	FActorSpawnParameters SpawnParametrs;
+	SpawnParametrs.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	AProjectile* Projectile;
-	Projectile = GetWorld()->SpawnActor<AProjectile>(ShootInfo.ProjectileClass, GetOwner()->GetActorTransform(), SpawnParametrs);
+	Projectile = GetWorld()->SpawnActor<AProjectile>(ShootInfo.ProjectileClass, GetOwner()->GetActorLocation() + FVector(0,0,200), GetOwner()->GetActorRotation(),  SpawnParametrs);
 	if (Projectile)
 	{
 		Projectile->Enemy = ShootInfo.ShootedEnemies[0];

@@ -22,7 +22,11 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
-	TArray<AEnemy*> EnemiesInAnd;
+	TArray<AEnemy*> EnemiesInEnd;
+
+	FTimerHandle AttackTimer;
+
+	void GetDamage();
 
 public:	
 	// Called every frame
@@ -42,5 +46,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "EndGame")
 	void DeleteInEnd(UPrimitiveComponent* OurComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+
 
 };

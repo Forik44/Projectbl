@@ -40,6 +40,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
 	float Damage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Mesh")
+	UStaticMeshComponent* Mesh;
+
 	UFUNCTION(BlueprintCallable, Category = "Events")
 	void SubscribeEvent();
 

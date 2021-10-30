@@ -5,8 +5,12 @@ AProjectile::AProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
 	Collision->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::FoundEnemy);
+
+	SetRootComponent(Collision);
 
 }
 

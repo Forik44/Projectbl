@@ -32,5 +32,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Economic")
 	float Damage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Economic")
+	float ImpactSpeed;
 	
 };
