@@ -99,7 +99,6 @@ void ABaseTown::StartPlacingBuilding(TSubclassOf<ABuilding> BuildingClass)
 
 void ABaseTown::PlaceBuilding(FVector Location)
 {
-	FVector WorldPosition = Ray(FVector2D(Location.X, Location.Y));
 	if (IsPlacing)
 	{
 		AProjectblGameModeBase* GameMode = Cast<AProjectblGameModeBase>(UGameplayStatics::GetGameMode(this));
@@ -107,18 +106,9 @@ void ABaseTown::PlaceBuilding(FVector Location)
 		{
 			return;
 		}
-		GameMode->AddMoney(-FlyBuilding->Cost);
-		int multiplierX = EdgeInforamation.LeftUp.X - EdgeInforamation.RightUp.X;
-		WorldPosition.X = ((FMath::CeilToInt(WorldPosition.X) / (int)(multiplierX / GridSize.X)) * (multiplierX / GridSize.X));
 
-		int multiplierY = EdgeInforamation.LeftUp.Y - EdgeInforamation.LeftDown.Y;
-		WorldPosition.Y = ((FMath::CeilToInt(WorldPosition.Y) / (int)(multiplierY / GridSize.Y)) * (multiplierY / GridSize.Y));
-
-		WorldPosition.X = FMath::Clamp(WorldPosition.X, EdgeInforamation.LeftUp.X, EdgeInforamation.RightUp.X);
-		WorldPosition.Y = FMath::Clamp(WorldPosition.Y, EdgeInforamation.LeftUp.Y, EdgeInforamation.LeftDown.Y);
-
-		int x = ((int)WorldPosition.X + (int)EdgeInforamation.RightDown.X) / ((int)EdgeInforamation.RightDown.X * 2 / (int)GridSize.X);
-		int y = ((int)WorldPosition.Y + (int)EdgeInforamation.RightDown.Y) / ((int)EdgeInforamation.RightDown.Y * 2 / (int)GridSize.Y);
+		int x = ((int)CurrentLocation.X + (int)EdgeInforamation.RightDown.X) / ((int)EdgeInforamation.RightDown.X * 2 / (int)GridSize.X);
+		int y = ((int)CurrentLocation.Y + (int)EdgeInforamation.RightDown.Y) / ((int)EdgeInforamation.RightDown.Y * 2 / (int)GridSize.Y);
 
 		if (IsPlaceTaken(x, y))
 		{
@@ -132,6 +122,7 @@ void ABaseTown::PlaceBuilding(FVector Location)
 				Grid[(x + i) * (int)GridSize.Y + y + j] = FlyBuilding;
 			}
 		}
+		GameMode->AddMoney(-FlyBuilding->Cost);
 		FlyBuilding->HideCollision();
 		FlyBuilding = nullptr;
 		IsPlacing = false;
@@ -165,6 +156,7 @@ void ABaseTown::OnTouchMove(ETouchIndex::Type FingerIndex, FVector Location)
 		Ray(ScreenPosition);
 		if(CanBePlaced)
 		FlyBuilding->SetActorLocation(NewLocation);
+		CurrentLocation = NewLocation;
 	}
 }
 

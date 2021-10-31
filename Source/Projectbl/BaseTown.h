@@ -45,6 +45,8 @@ private:
 		
 	bool IsPlaceTaken(int x, int y);
 	bool CanBePlaced, IsPlacing;
+
+	FVector CurrentLocation;
 	
 public:	
 	

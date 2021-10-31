@@ -48,5 +48,4 @@ public:
 	void DeleteInEnd(UPrimitiveComponent* OurComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 
-
 };

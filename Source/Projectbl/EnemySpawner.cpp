@@ -1,6 +1,8 @@
 #include "EnemySpawner.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
+#include "ProjectblGameModeBase.h"
 
 AEnemySpawner::AEnemySpawner()
 	:
@@ -40,6 +42,8 @@ void AEnemySpawner::StartSpawnEnemies()
 {
 	if (CurrentSpawnStage > EnemyInfo.SpawnStages.Num() - 1)
 	{
+		AProjectblGameModeBase* GameMode = Cast<AProjectblGameModeBase>(UGameplayStatics::GetGameMode(this));
+		GameMode->StartCheckWinGame();
 		return;
 	}
 	StartSpawnStage();
