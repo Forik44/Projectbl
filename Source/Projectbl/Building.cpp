@@ -58,7 +58,4 @@ void ABuilding::DeleteEnemy(UPrimitiveComponent* OurComp, AActor* OtherActor, UP
 				break;
 		}
 	}
-
-
-
 }
