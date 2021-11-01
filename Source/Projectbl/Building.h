@@ -35,22 +35,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building")
 	FVector2D Grid;
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
-	UShootComponent* ShootComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shoot")
-	USphereComponent* Collision;
-
-	UFUNCTION(BlueprintCallable, Category = "Shoot")
-	void AddEnemy(UPrimitiveComponent* OurComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION(BlueprintCallable, Category = "Shoot")
-	void DeleteEnemy(UPrimitiveComponent* OurComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-	void HideCollision();
 
 	bool IsFly;
 };

@@ -123,7 +123,12 @@ void ABaseTown::PlaceBuilding(FVector Location)
 			}
 		}
 		GameMode->AddMoney(-FlyBuilding->Cost);
-		FlyBuilding->HideCollision();
+
+		AParentTower* Tower = Cast<AParentTower>(FlyBuilding);
+		if (Tower)
+		{
+			Tower->HideCollision();
+		}
 		FlyBuilding = nullptr;
 		IsPlacing = false;
 	}
