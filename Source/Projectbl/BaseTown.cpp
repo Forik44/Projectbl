@@ -99,6 +99,7 @@ void ABaseTown::StartPlacingBuilding(TSubclassOf<ABuilding> BuildingClass)
 
 void ABaseTown::PlaceBuilding(FVector Location)
 {
+	UE_LOG(LogTemp, Log, TEXT("Function"));
 	if (IsPlacing)
 	{
 		AProjectblGameModeBase* GameMode = Cast<AProjectblGameModeBase>(UGameplayStatics::GetGameMode(this));
@@ -106,15 +107,15 @@ void ABaseTown::PlaceBuilding(FVector Location)
 		{
 			return;
 		}
-
-		int x = ((int)CurrentLocation.X + (int)EdgeInforamation.RightDown.X) / ((int)EdgeInforamation.RightDown.X * 2 / (int)GridSize.X);
-		int y = ((int)CurrentLocation.Y + (int)EdgeInforamation.RightDown.Y) / ((int)EdgeInforamation.RightDown.Y * 2 / (int)GridSize.Y);
-
+		
+		int x = ((int)CurrentLocation.X - (int)EdgeInforamation.LeftUp.X) / (((int)EdgeInforamation.RightDown.X - (int)EdgeInforamation.LeftUp.X) / (int)GridSize.X);
+		int y = ((int)CurrentLocation.Y - (int)EdgeInforamation.LeftUp.Y) / (((int)EdgeInforamation.RightDown.Y - (int)EdgeInforamation.LeftUp.Y) / (int)GridSize.Y);
+		UE_LOG(LogTemp, Log, TEXT("Dengi %i , %i"), x, y);
 		if (IsPlaceTaken(x, y))
 		{
 			return;
 		}
-
+		UE_LOG(LogTemp, Log, TEXT("Ne zanato"));
 		for (int i = 0; i < (int)FlyBuilding->Grid.X; i++)
 		{
 			for (int j = 0; j < (int)FlyBuilding->Grid.Y; j++)
@@ -131,6 +132,7 @@ void ABaseTown::PlaceBuilding(FVector Location)
 		}
 		FlyBuilding = nullptr;
 		IsPlacing = false;
+
 	}
 }
 
