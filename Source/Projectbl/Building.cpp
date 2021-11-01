@@ -27,7 +27,6 @@ void ABuilding::Tick(float DeltaTime)
 
 void ABuilding::AddEnemy(UPrimitiveComponent* OurComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Log, TEXT("Add"));
 	APawn* OurPawn = Cast<APawn>(OtherActor);
 	if (!OurPawn)
 	{
@@ -51,7 +50,6 @@ void ABuilding::HideCollision()
 
 void ABuilding::DeleteEnemy(UPrimitiveComponent* OurComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UE_LOG(LogTemp, Log, TEXT("Delete"));
 	for (auto Enemy : ShootComponent->ShootInfo.ShootedEnemies) {
 		AActor* OurActor = Cast<AActor>(Enemy);
 		if (OurActor == OtherActor)

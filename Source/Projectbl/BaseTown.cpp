@@ -154,9 +154,12 @@ void ABaseTown::OnTouchMove(ETouchIndex::Type FingerIndex, FVector Location)
 
 		UGameplayStatics::ProjectWorldToScreen(PlayerController1, NewLocation, ScreenPosition);
 		Ray(ScreenPosition);
-		if(CanBePlaced)
-		FlyBuilding->SetActorLocation(NewLocation);
-		CurrentLocation = NewLocation;
+
+		if (CanBePlaced)
+		{
+			FlyBuilding->SetActorLocation(NewLocation);
+			CurrentLocation = NewLocation;
+		}
 	}
 }
 

@@ -45,8 +45,10 @@ void UShootComponent::SpawnProjectile()
 void UShootComponent::StartShooting()
 {
 	ABuilding* OurBuilding = Cast<ABuilding>(this->GetOwner());
-	if (ShootInfo.ShootedEnemies.Num() == 1 && !OurBuilding->IsFly)
+	UE_LOG(LogTemp, Log, TEXT("Function"));
+	if (ShootInfo.ShootedEnemies.Num() >= 1 && !OurBuilding->IsFly)
 	{
+		UE_LOG(LogTemp, Log, TEXT("shoot"));
 		GetWorld()->GetTimerManager().SetTimer(ShootTimer, this, &UShootComponent::SpawnProjectile, ShootInfo.ShootRate, true);
 	}
 	
