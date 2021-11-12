@@ -16,6 +16,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	int Health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
+	int StartHealth;
 protected:
 	virtual void BeginPlay() override;
 

@@ -49,8 +49,14 @@ bool ABaseTown::IsPlaceTaken(int x, int y)
 	{
 		for (int j = 0; j < FlyBuilding->Grid.Y; j++)
 		{
-			if(Grid[(x + i) * (int)GridSize.Y + y + j] != nullptr)
+			if (x - i < 0 || y - j < 0)
+			{
 				return true;
+			}
+			if (Grid[(x - i) * (int)GridSize.Y + y - j] != nullptr)
+			{
+				return true;
+			}
 		}
 	}
 	return false;
@@ -110,17 +116,16 @@ void ABaseTown::PlaceBuilding(FVector Location)
 		
 		int x = ((int)CurrentLocation.X - (int)EdgeInforamation.LeftUp.X) / (((int)EdgeInforamation.RightDown.X - (int)EdgeInforamation.LeftUp.X) / (int)GridSize.X);
 		int y = ((int)CurrentLocation.Y - (int)EdgeInforamation.LeftUp.Y) / (((int)EdgeInforamation.RightDown.Y - (int)EdgeInforamation.LeftUp.Y) / (int)GridSize.Y);
-		UE_LOG(LogTemp, Log, TEXT("Dengi %i , %i"), x, y);
-		if (IsPlaceTaken(x, y))
-		{
-			return;
-		}
 		UE_LOG(LogTemp, Log, TEXT("Ne zanato"));
 		for (int i = 0; i < (int)FlyBuilding->Grid.X; i++)
 		{
 			for (int j = 0; j < (int)FlyBuilding->Grid.Y; j++)
 			{
-				Grid[(x + i) * (int)GridSize.Y + y + j] = FlyBuilding;
+				if(x - i < 0 || y - j < 0)
+				{
+					return;
+				}
+				Grid[(x - i) * (int)GridSize.Y + y - j] = FlyBuilding;
 			}
 		}
 		GameMode->AddMoney(-FlyBuilding->Cost);
@@ -162,11 +167,42 @@ void ABaseTown::OnTouchMove(ETouchIndex::Type FingerIndex, FVector Location)
 		UGameplayStatics::ProjectWorldToScreen(PlayerController1, NewLocation, ScreenPosition);
 		Ray(ScreenPosition);
 
-		if (CanBePlaced)
+		if (!CanBePlaced)
 		{
-			FlyBuilding->SetActorLocation(NewLocation);
-			CurrentLocation = NewLocation;
+			return;
 		}
+
+		int x = (NewLocation.X - EdgeInforamation.LeftUp.X) / ((EdgeInforamation.RightDown.X - EdgeInforamation.LeftUp.X) / GridSize.X);
+		int y = (NewLocation.Y - EdgeInforamation.LeftUp.Y) / ((EdgeInforamation.RightDown.Y - EdgeInforamation.LeftUp.Y) / GridSize.Y);
+		if (IsPlaceTaken(x, y))
+		{
+			return;
+		}
+		for (int i = 0; i < (int)FlyBuilding->Grid.X; i++)
+		{
+			for (int j = 0; j < (int)FlyBuilding->Grid.Y; j++)
+			{
+				if (i != 0 || j != 0)
+				{
+					FVector NearLocation;
+					FVector NearLocation2;
+					NearLocation.X = ((EdgeInforamation.RightDown.X - EdgeInforamation.LeftUp.X) * (x - i)) / GridSize.X + EdgeInforamation.LeftUp.X;
+					NearLocation.Y = ((EdgeInforamation.RightDown.Y - EdgeInforamation.LeftUp.Y) * (y + j)) / GridSize.Y + EdgeInforamation.LeftUp.Y;
+					NearLocation.Z = NewLocation.Z;
+					UGameplayStatics::ProjectWorldToScreen(PlayerController1, NearLocation, ScreenPosition);
+					Ray(ScreenPosition);
+					if (!CanBePlaced)
+					{
+						return;
+					}
+				
+				}	
+			}
+		}
+		UE_LOG(LogTemp, Log, TEXT("Ne zanato"), x, y);
+		FlyBuilding->SetActorLocation(NewLocation);
+		CurrentLocation = NewLocation;
+		
 	}
 }
 
